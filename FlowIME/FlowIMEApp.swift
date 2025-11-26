@@ -8,6 +8,7 @@
 import SwiftUI
 import AppKit
 import ServiceManagement
+import Darwin
 
 @main
 struct FlowIMEApp: App {
@@ -27,6 +28,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var keyboardMonitor: KeyboardMonitor?
     // Count consecutive ASCII letter characters before the cursor
     private var asciiStreak: Int = 0
+    private var autoSwitchEnabled: Bool = true {
+        didSet {
+            UserDefaults.standard.set(autoSwitchEnabled, forKey: "AutoSwitchEnabled")
+            updateStatusItemIcon()
+        }
+    }
 
     private func appVersionString() -> String {
         let info = Bundle.main.infoDictionary
@@ -43,7 +50,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Create menu bar item
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem?.button {
-            button.title = "🔄"
+            autoSwitchEnabled = UserDefaults.standard.object(forKey: "AutoSwitchEnabled") as? Bool ?? true
+            button.title = autoSwitchEnabled ? "🔄" : "⏸"
             button.action = #selector(statusItemClicked)
             button.target = self
         }
@@ -110,6 +118,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         keyboardMonitor?.onAlphabetInput = { [weak self] in
             self?.handleAlphabetInput()
         }
+        keyboardMonitor?.onAlphabetKey = { key in
+            print("⌨️ Key: '\(key)'")
+        }
 
         // Start keyboard monitoring
         keyboardMonitor?.startMonitoring()
@@ -118,55 +129,146 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         enableLoginItem()
     }
 
+    private func updateStatusItemIcon() {
+        if let button = statusItem?.button {
+            button.title = autoSwitchEnabled ? "🔄" : "⏸"
+        }
+    }
+
     // Decide desired mode (called from event tap thread)
     private func decideDesiredMode() -> IMEController.InputMode? {
         guard let manager = manager else { return nil }
-        if manager.isComposing() { return nil }
+        if !autoSwitchEnabled { return nil }
+        let composing = manager.isComposing()
+        var summaryPos: Int = -1
+        var summaryPrev: Character? = nil
+        var summarySession = (keyboardMonitor?.isJPSessionActive() == true)
+        var summarySpace = (imeController?.getCurrentInputMode() == .japanese) && (keyboardMonitor?.isSpacePressed() == true)
+        func log(_ result: IMEController.InputMode?, _ reason: String) {
+            let p = summaryPrev.map { String($0).debugDescription } ?? "(none)"
+            let res = result == nil ? "nil" : (result == .some(.japanese) ? "JP" : "EN")
+            print("[decide] pos=\(summaryPos) prev=\(p) compose=\(composing) session=\(summarySession) space=\(summarySpace) → \(res) reason=\(reason)")
+        }
+        // Respect real user-initiated toggle: short grace window only
+        if let ime = imeController, ime.isRecentUserToggle(grace: 0.3) {
+            log(nil, "userToggle"); return nil
+        }
+        if composing { log(nil, "compose"); return nil }
+
         if let ctx = manager.getContextInfo() {
-            if ctx.cursorPosition == 0 { return nil }
-            // Strong right-side English context: prefer English immediately
-            if let right = ctx.right, let rsc = String(right).unicodeScalars.first,
-               rsc.isASCII && (CharacterSet.letters.contains(rsc) || CharacterSet.decimalDigits.contains(rsc)) {
-                return .english
-            }
-            if keyboardMonitor?.isJPSessionActive() == true { return nil }
-            if keyboardMonitor?.isCompositionHoldActive() == true { return nil }
-            if imeController?.getCurrentInputMode() == .japanese, keyboardMonitor?.isSpacePressed() == true { return nil }
+            summaryPos = ctx.cursorPosition; summaryPrev = ctx.left
+            if ctx.cursorPosition == 0 { log(nil, "head"); return nil }
             if let prev = ctx.left {
                 // If just after newline, do not force switch
-                if let sc = String(prev).unicodeScalars.first, (sc.value == 0x0A || sc.value == 0x0D) { return nil }
-                if isJapanese(prev) { return .japanese }
-                if let sc = String(prev).unicodeScalars.first, sc.isASCII && (CharacterSet.letters.contains(sc) || CharacterSet.decimalDigits.contains(sc)) { return .english }
+                if let sc = String(prev).unicodeScalars.first, (sc.value == 0x0A || sc.value == 0x0D) { log(nil, "newline"); return nil }
+                // ORDER: prev ASCII -> EN (takes precedence over session/hold/space)
+                if let sc = String(prev).unicodeScalars.first, sc.isASCII && (CharacterSet.letters.contains(sc) || CharacterSet.decimalDigits.contains(sc)) {
+                    // When currently in JP mode, only allow EN flip if user likely changed context
+                    if let current = imeController?.getCurrentInputMode(), current == .japanese {
+                        var allowEN = false
+                        let now = Date()
+                        if keyboardMonitor?.didNavigateRecently(within: 0.3) == true {
+                            allowEN = true
+                        } else if let t = keyboardMonitor?.lastUserTypingTime, now.timeIntervalSince(t) > 0.2 {
+                            // small idle gap suggests intentional context change (e.g., click or pause)
+                            allowEN = true
+                        }
+                        if !allowEN { log(nil, "jpTyping"); return nil }
+                    }
+                    // Guard against AX timing glitch: confirm the same left-char twice quickly
+                    usleep(7000) // ~7ms
+                    if let ctx2 = manager.getContextInfo(), ctx2.cursorPosition == ctx.cursorPosition, ctx2.left == ctx.left {
+                        log(.english, "prevEN"); return .english
+                    } else {
+                        log(nil, "unstable"); return nil
+                    }
+                }
+                // Then prev JP -> JP
+                if isJapanese(prev) {
+                    // Optional stability check only if we are about to actively switch
+                    if let current = imeController?.getCurrentInputMode(), current != .japanese {
+                        usleep(7000)
+                        if let ctx2 = manager.getContextInfo(), ctx2.cursorPosition == ctx.cursorPosition, ctx2.left == ctx.left {
+                            log(.japanese, "prevJP"); return .japanese
+                        } else {
+                            log(nil, "unstable"); return nil
+                        }
+                    } else {
+                        log(.japanese, "prevJP"); return .japanese
+                    }
+                }
             }
-            return nil
+            // Finally suppressions for neutral cases
+            if keyboardMonitor?.isJPSessionActive() == true { log(nil, "session"); return nil }
+            if keyboardMonitor?.isCompositionHoldActive() == true { log(nil, "hold"); return nil }
+            if (imeController?.getCurrentInputMode() == .japanese) && (keyboardMonitor?.isSpacePressed() == true) { log(nil, "space"); return nil }
+            log(nil, "neutral"); return nil
         }
         if let info = manager.getDetailedInfo() {
-            if info.cursorPosition == 0 { return nil }
-            if let prev = info.characterBefore, let s = String(prev).unicodeScalars.first, (s.value == 0x0A || s.value == 0x0D) { return nil }
-            // Strong right-side English context: prefer English immediately (fallback path)
-            if let right = info.characterAfter, let rsc = String(right).unicodeScalars.first,
-               rsc.isASCII && (CharacterSet.letters.contains(rsc) || CharacterSet.decimalDigits.contains(rsc)) {
-                return .english
-            }
-            if keyboardMonitor?.isJPSessionActive() == true { return nil }
-            if keyboardMonitor?.isCompositionHoldActive() == true { return nil }
-            if imeController?.getCurrentInputMode() == .japanese, keyboardMonitor?.isSpacePressed() == true { return nil }
+            summaryPos = info.cursorPosition; summaryPrev = info.characterBefore
+            if info.cursorPosition == 0 { log(nil, "head"); return nil }
+            if let prev = info.characterBefore, let s = String(prev).unicodeScalars.first, (s.value == 0x0A || s.value == 0x0D) { log(nil, "newline"); return nil }
             if let prev = info.characterBefore {
-                if isJapanese(prev) { return .japanese }
-                if let sc = String(prev).unicodeScalars.first, sc.isASCII && (CharacterSet.letters.contains(sc) || CharacterSet.decimalDigits.contains(sc)) { return .english }
+                if let sc = String(prev).unicodeScalars.first, sc.isASCII && (CharacterSet.letters.contains(sc) || CharacterSet.decimalDigits.contains(sc)) {
+                    // When currently in JP mode, only allow EN flip if user likely changed context
+                    if let current = imeController?.getCurrentInputMode(), current == .japanese {
+                        var allowEN = false
+                        let now = Date()
+                        if keyboardMonitor?.didNavigateRecently(within: 0.3) == true {
+                            allowEN = true
+                        } else if let t = keyboardMonitor?.lastUserTypingTime, now.timeIntervalSince(t) > 0.2 {
+                            allowEN = true
+                        }
+                        if !allowEN { log(nil, "jpTyping"); return nil }
+                    }
+                    // Fallback path also honors stability
+                    usleep(7000)
+                    if let info2 = manager.getDetailedInfo(), info2.cursorPosition == info.cursorPosition, info2.characterBefore == info.characterBefore {
+                        log(.english, "prevEN"); return .english
+                    } else {
+                        log(nil, "unstable"); return nil
+                    }
+                }
+                if isJapanese(prev) {
+                    if let current = imeController?.getCurrentInputMode(), current != .japanese {
+                        usleep(7000)
+                        if let info2 = manager.getDetailedInfo(), info2.cursorPosition == info.cursorPosition, info2.characterBefore == info.characterBefore {
+                            log(.japanese, "prevJP"); return .japanese
+                        } else {
+                            log(nil, "unstable"); return nil
+                        }
+                    } else {
+                        log(.japanese, "prevJP"); return .japanese
+                    }
+                }
             }
+            if keyboardMonitor?.isJPSessionActive() == true { log(nil, "session"); return nil }
+            if keyboardMonitor?.isCompositionHoldActive() == true { log(nil, "hold"); return nil }
+            if (imeController?.getCurrentInputMode() == .japanese) && (keyboardMonitor?.isSpacePressed() == true) { log(nil, "space"); return nil }
+            log(nil, "neutral"); return nil
         }
         return nil
     }
 
     private func enableLoginItem() {
-        // The helper must be embedded as a Login Item with this identifier
-        let helperID = "com.flowime.inputmethod.FlowIMEHelper"
+        // Resolve embedded helper's bundle identifier dynamically to avoid mismatch
+        let helperID: String = {
+            let helperURL = Bundle.main.bundleURL
+                .appendingPathComponent("Contents/Library/LoginItems/FlowIMEHelper.app", isDirectory: true)
+            let infoURL = helperURL.appendingPathComponent("Contents/Info.plist")
+            if let dict = NSDictionary(contentsOf: infoURL),
+               let id = dict["CFBundleIdentifier"] as? String, !id.isEmpty {
+                return id
+            }
+            // Fallbacks (older hardcoded IDs)
+            return "com.flowime.inputmethod.FlowIMEHelper"
+        }()
         do {
             try SMAppService.loginItem(identifier: helperID).register()
             print("✅ Login item registered: \(helperID)")
         } catch {
-            print("⚠️ Login item register failed: \(error)")
+            print("⚠️ Login item register failed: \(error) id=\(helperID)")
+            print("ℹ️ Check: FlowIME.app/Contents/Library/LoginItems/FlowIMEHelper.app exists and IDs match.")
         }
     }
 
@@ -175,8 +277,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 前の文字を取得
         if let ctx = manager.getContextInfo() {
-            print("─────────────────────────────────────────────────")
-            print("🎯 Alphabet key detected!")
+            print("🎯 Alphabet key detected! (post)")
             print("📍 Cursor position: \(ctx.cursorPosition)")
             if let ch = ctx.left {
                 print("✨ Character before cursor: \(String(ch).debugDescription)")
@@ -193,11 +294,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: "FlowIME \(appVersionString())", action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
 
-        if AccessibilityManager.checkAccessibilityPermissions() {
-            menu.addItem(NSMenuItem(title: "✅ IME Auto-Switching Active", action: nil, keyEquivalent: ""))
-        } else {
-            menu.addItem(NSMenuItem(title: "⚠️ No Permissions", action: nil, keyEquivalent: ""))
-        }
+        let toggle = NSMenuItem(title: "Auto Switch", action: #selector(toggleAutoSwitch), keyEquivalent: "")
+        toggle.state = autoSwitchEnabled ? .on : .off
+        toggle.target = self
+        menu.addItem(toggle)
+
+        menu.addItem(NSMenuItem.separator())
+
+        let jp = NSMenuItem(title: "Switch to Japanese", action: #selector(switchToJP), keyEquivalent: "")
+        jp.target = self
+        menu.addItem(jp)
+        let en = NSMenuItem(title: "Switch to English", action: #selector(switchToEN), keyEquivalent: "")
+        en.target = self
+        menu.addItem(en)
 
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(quit), keyEquivalent: "q"))
@@ -205,6 +314,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem?.menu = menu
         statusItem?.button?.performClick(nil)
         statusItem?.menu = nil
+    }
+
+    @objc private func toggleAutoSwitch() {
+        autoSwitchEnabled.toggle()
+    }
+
+    @objc private func switchToJP() {
+        imeController?.markUserToggle()
+        imeController?.switchToInputMode(.japanese)
+    }
+
+    @objc private func switchToEN() {
+        imeController?.markUserToggle()
+        imeController?.switchToInputMode(.english)
     }
 
     @objc func quit() {

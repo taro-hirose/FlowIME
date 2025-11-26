@@ -20,6 +20,9 @@ class IMEController {
     private(set) var lastUserInitiatedChangeTime: Date?
     private var programmaticChangeInProgress = false
     private var isMonitoringChanges = false
+    // Short enforcement to resist OS/user auto-switch immediately after our decision
+    private var enforceDesiredModeValue: InputMode?
+    private var enforceUntil: Date?
     private var lastNotifiedSourceID: String?
     private var lastNotifyAt: Date?
 
@@ -113,9 +116,38 @@ class IMEController {
             programmaticChangeInProgress = false
             print("🔄 Input source changed (programmatic) \(currentID ?? "")")
         } else {
-            lastUserInitiatedChangeTime = Date()
+            // Enforcement: briefly resist opposite auto-switches from OS/user
+            if let until = enforceUntil, Date() < until, let target = enforceDesiredModeValue {
+                let modeNow = getCurrentInputMode()
+                if modeNow != target {
+                    programmaticChangeInProgress = true
+                    switchToInputMode(target)
+                    // Schedule a re-check shortly after to handle async source update
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) { [weak self] in
+                        guard let self = self else { return }
+                        if let until2 = self.enforceUntil, Date() < until2, let target2 = self.enforceDesiredModeValue {
+                            if self.getCurrentInputMode() != target2 {
+                                self.programmaticChangeInProgress = true
+                                self.switchToInputMode(target2)
+                            }
+                        }
+                    }
+                    return
+                }
+            }
+            // enforcement window expired or no conflict
+            enforceDesiredModeValue = nil
+            enforceUntil = nil
+            // Do NOT mark user toggle here blindly; KeyboardMonitor will mark when real toggle shortcuts are pressed,
+            // and our own menu actions call markUserToggle(). This avoids false positives from OS auto-switching.
             print("🔄 Input source changed (user/system) \(currentID ?? "")")
         }
+    }
+
+    // Expose a short enforcement window to keep desired mode for a single keystroke
+    func enforceDesiredMode(_ mode: InputMode, duration: TimeInterval = 0.6) {
+        enforceDesiredModeValue = mode
+        enforceUntil = Date().addingTimeInterval(duration)
     }
 
     // Mark an explicit user toggle detected via key combo

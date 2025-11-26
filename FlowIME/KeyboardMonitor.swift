@@ -19,6 +19,8 @@ class KeyboardMonitor {
 
     // Called asynchronously after key event (for logging, etc.)
     var onAlphabetInput: (() -> Void)?
+    // Optional: notify the actual alphabet key pressed (for diagnostics)
+    var onAlphabetKey: ((String) -> Void)?
     // Decide desired input mode BEFORE the key is delivered (called in tap thread)
     // Return nil to keep current mode and not consume the event.
     var onPreAlphabetInputDecide: (() -> IMEController.InputMode?)?
@@ -26,6 +28,8 @@ class KeyboardMonitor {
 
     // Timestamp of the last real text keyDown (alphabet or Japanese keys)
     private(set) var lastUserTypingTime: Date?
+    // Last alphabet key string (diagnostics)
+    private(set) var lastKeyString: String?
     // Heuristic hold to avoid auto-switch during ongoing JP conversion
     private var compositionHoldUntil: Date?
     private let compositionHoldWindow: TimeInterval = 1.5
@@ -40,8 +44,14 @@ class KeyboardMonitor {
     init() {}
 
     func startMonitoring() {
-        // Create event tap for key down/up events
-        let eventMask = (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue)
+        // Create event tap for key and mouse down events
+        let eventMask = (
+            (1 << CGEventType.keyDown.rawValue) |
+            (1 << CGEventType.keyUp.rawValue) |
+            (1 << CGEventType.leftMouseDown.rawValue) |
+            (1 << CGEventType.rightMouseDown.rawValue) |
+            (1 << CGEventType.otherMouseDown.rawValue)
+        )
 
         guard let eventTap = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
@@ -118,6 +128,12 @@ class KeyboardMonitor {
     private let runLockWindow: TimeInterval = 0.2
 
     private func processEvent(type: CGEventType, event: CGEvent) -> Bool {
+        // Treat mouse clicks as navigation (caret may move by click)
+        if type == .leftMouseDown || type == .rightMouseDown || type == .otherMouseDown {
+            lastNavigationTime = Date()
+            // Do not consume mouse events
+            return false
+        }
         // Ignore our own synthetic events
         if event.getIntegerValueField(.eventSourceUserData) == syntheticTag {
             return false
@@ -157,6 +173,18 @@ class KeyboardMonitor {
             return false
         }
 
+        // Commit/newline handling: treat Return/Enter/Escape as navigation-like and reset JP session/holds
+        if type == .keyDown && isCommitKey(keyCode: keyCode) {
+            lastNavigationTime = Date()
+            compositionHoldUntil = nil
+            spacePressed = false
+            jpSessionActive = false
+            jpSessionCount = 0
+            canceledJPHoldUntil = nil
+            // Do not consume commit keys
+            return false
+        }
+
         // JP composition heuristics: while in JP mode, extend hold on most keys except commits/navigation.
         if type == .keyDown, let ime = imeController, ime.getCurrentInputMode() == .japanese {
             if isSpace(keyCode: keyCode) { spacePressed = true }
@@ -177,6 +205,16 @@ class KeyboardMonitor {
         }
 
         if hasModifiers {
+            // Detect common input-source toggle shortcuts and mark as user toggle
+            if type == .keyDown {
+                if isSpace(keyCode: keyCode) && (flags.contains(.maskCommand) || flags.contains(.maskControl)) {
+                    imeController?.markUserToggle()
+                }
+                // JIS keyboards: Eisu(102) / Kana(104)
+                if keyCode == 102 || keyCode == 104 {
+                    imeController?.markUserToggle()
+                }
+            }
             // Ignore shortcuts (actual input source change will be observed via DistributedNotification)
             return false
         }
@@ -186,6 +224,12 @@ class KeyboardMonitor {
             let now = Date()
             // Record when the user actually pressed a text key (alphabet)
             lastUserTypingTime = now
+            // Map keyCode to printable letter (respect Shift)
+            if let letter = letterForKeyCode(keyCode, shift: flags.contains(.maskShift)) {
+                lastKeyString = letter
+            } else {
+                lastKeyString = nil
+            }
 
             // Do not block switching solely due to JP session; composition/space guards handled elsewhere
 
@@ -213,6 +257,7 @@ class KeyboardMonitor {
                         let current = ime.getCurrentInputMode()
                         if current != desiredMode {
                             ime.switchToInputMode(desiredMode)
+                            ime.enforceDesiredMode(desiredMode)
                             if desiredMode == .japanese {
                                 self.jpSessionActive = true
                                 self.jpSessionCount = max(1, self.jpSessionCount + 1)
@@ -229,7 +274,10 @@ class KeyboardMonitor {
                     }
                     self.postSyntheticKey(keyCode: keyCode, flags: flags, keyDown: true)
                     self.postSyntheticKey(keyCode: keyCode, flags: flags, keyDown: false)
-                    DispatchQueue.main.async { [weak self] in self?.onAlphabetInput?() }
+                    DispatchQueue.main.async { [weak self] in
+                        if let letter = self?.lastKeyString { self?.onAlphabetKey?(letter) }
+                        self?.onAlphabetInput?()
+                    }
                 }
                 return true // consume original
             }
@@ -242,6 +290,7 @@ class KeyboardMonitor {
                     // Prefer responsiveness: allow immediate switch
                     lastCheckTime = now
                     ime.switchToInputMode(desiredMode)
+                    ime.enforceDesiredMode(desiredMode)
                     if desiredMode == .japanese {
                         jpSessionActive = true
                         jpSessionCount = max(1, jpSessionCount + 1)
@@ -256,7 +305,10 @@ class KeyboardMonitor {
                     postSyntheticKey(keyCode: keyCode, flags: flags, keyDown: true)
                     postSyntheticKey(keyCode: keyCode, flags: flags, keyDown: false)
                     suppressNextKeyUpForKeyCodes.insert(keyCode)
-                    DispatchQueue.main.async { [weak self] in self?.onAlphabetInput?() }
+                    DispatchQueue.main.async { [weak self] in
+                        if let letter = self?.lastKeyString { self?.onAlphabetKey?(letter) }
+                        self?.onAlphabetInput?()
+                    }
                     return true
                 }
                 // If already JP and desired JP, mark session as active
@@ -311,6 +363,17 @@ class KeyboardMonitor {
         e.flags = flags
         e.setIntegerValueField(.eventSourceUserData, value: syntheticTag)
         e.post(tap: .cghidEventTap)
+    }
+
+    private func letterForKeyCode(_ keyCode: Int64, shift: Bool) -> String? {
+        let map: [Int64: String] = [
+            0:"a",11:"b",8:"c",2:"d",14:"e",3:"f",5:"g",4:"h",34:"i",38:"j",
+            40:"k",37:"l",46:"m",45:"n",31:"o",35:"p",12:"q",15:"r",1:"s",
+            17:"t",32:"u",9:"v",13:"w",7:"x",16:"y",6:"z"
+        ]
+        guard var s = map[keyCode] else { return nil }
+        if shift { s = s.uppercased() }
+        return s
     }
 
     private func isAlphabetKey(keyCode: Int64) -> Bool {
