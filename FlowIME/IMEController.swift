@@ -20,6 +20,8 @@ class IMEController {
     private(set) var lastUserInitiatedChangeTime: Date?
     private var programmaticChangeInProgress = false
     private var isMonitoringChanges = false
+    private var lastNotifiedSourceID: String?
+    private var lastNotifyAt: Date?
 
     /// 現在のIME状態を取得
     func getCurrentInputMode() -> InputMode? {
@@ -94,12 +96,25 @@ class IMEController {
 
     @objc private func inputSourceChanged(_ notification: Notification) {
         lastInputSourceChangeTime = Date()
+        // Resolve current source ID for logging/throttle
+        var currentID: String? = nil
+        if let src = TISCopyCurrentKeyboardInputSource()?.takeRetainedValue(), let sid = TISGetInputSourceProperty(src, kTISPropertyInputSourceID) {
+            currentID = Unmanaged<CFString>.fromOpaque(sid).takeUnretainedValue() as String
+        }
+
+        // Throttle duplicate notifications (same ID within 200ms)
+        if let cid = currentID, let lastID = lastNotifiedSourceID, cid == lastID, let t = lastNotifyAt, Date().timeIntervalSince(t) < 0.2 {
+            return
+        }
+        lastNotifiedSourceID = currentID
+        lastNotifyAt = Date()
+
         if programmaticChangeInProgress {
             programmaticChangeInProgress = false
-            print("🔄 Input source changed (programmatic)")
+            print("🔄 Input source changed (programmatic) \(currentID ?? "")")
         } else {
             lastUserInitiatedChangeTime = Date()
-            print("🔄 Input source changed (user/system)")
+            print("🔄 Input source changed (user/system) \(currentID ?? "")")
         }
     }
 

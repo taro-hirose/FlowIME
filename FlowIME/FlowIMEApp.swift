@@ -25,9 +25,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var manager: AccessibilityManager?
     var imeController: IMEController?
     var keyboardMonitor: KeyboardMonitor?
+    // Count consecutive ASCII letter characters before the cursor
+    private var asciiStreak: Int = 0
+
+    private func appVersionString() -> String {
+        let info = Bundle.main.infoDictionary
+        let ver = info?["CFBundleShortVersionString"] as? String ?? "?"
+        let build = info?["CFBundleVersion"] as? String ?? "?"
+        return "v\(ver) (\(build))"
+    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("🚀 FlowIME - Phase 3 Prototype")
+        print("🚀 FlowIME \(appVersionString())")
         print(String(repeating: "=", count: 50))
         print()
 
@@ -112,30 +121,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Decide desired mode (called from event tap thread)
     private func decideDesiredMode() -> IMEController.InputMode? {
         guard let manager = manager else { return nil }
-        // Do not interfere during ongoing IME composition (marked text exists)
         if manager.isComposing() { return nil }
-        if let info = manager.getDetailedInfo() {
-            // If user paused sufficiently since last typing, prefer Japanese start
-            if let last = keyboardMonitor?.lastUserAlphabetTime {
-                let idle = Date().timeIntervalSince(last)
-                if idle > 1.2 { return .japanese }
-            } else {
-                // No prior typing recorded in this session
-                return .japanese
+        if let ctx = manager.getContextInfo() {
+            if ctx.cursorPosition == 0 { return nil }
+            // Strong right-side English context: prefer English immediately
+            if let right = ctx.right, let rsc = String(right).unicodeScalars.first,
+               rsc.isASCII && (CharacterSet.letters.contains(rsc) || CharacterSet.decimalDigits.contains(rsc)) {
+                return .english
             }
-            // 文頭（カーソル位置0）では日本語を優先
-            if info.cursorPosition == 0 { return .japanese }
-
-            if let char = info.characterBefore, let scalar = String(char).unicodeScalars.first {
-                // 直前が改行/空白なら日本語を優先
-                if CharacterSet.whitespacesAndNewlines.contains(scalar) { return .japanese }
-
-                if CharacterSet.letters.contains(scalar) {
-                    return isJapanese(char) ? .japanese : .english
-                }
-                if CharacterSet.decimalDigits.contains(scalar) {
-                    return .english
-                }
+            if keyboardMonitor?.isJPSessionActive() == true { return nil }
+            if keyboardMonitor?.isCompositionHoldActive() == true { return nil }
+            if imeController?.getCurrentInputMode() == .japanese, keyboardMonitor?.isSpacePressed() == true { return nil }
+            if let prev = ctx.left {
+                // If just after newline, do not force switch
+                if let sc = String(prev).unicodeScalars.first, (sc.value == 0x0A || sc.value == 0x0D) { return nil }
+                if isJapanese(prev) { return .japanese }
+                if let sc = String(prev).unicodeScalars.first, sc.isASCII && (CharacterSet.letters.contains(sc) || CharacterSet.decimalDigits.contains(sc)) { return .english }
+            }
+            return nil
+        }
+        if let info = manager.getDetailedInfo() {
+            if info.cursorPosition == 0 { return nil }
+            if let prev = info.characterBefore, let s = String(prev).unicodeScalars.first, (s.value == 0x0A || s.value == 0x0D) { return nil }
+            // Strong right-side English context: prefer English immediately (fallback path)
+            if let right = info.characterAfter, let rsc = String(right).unicodeScalars.first,
+               rsc.isASCII && (CharacterSet.letters.contains(rsc) || CharacterSet.decimalDigits.contains(rsc)) {
+                return .english
+            }
+            if keyboardMonitor?.isJPSessionActive() == true { return nil }
+            if keyboardMonitor?.isCompositionHoldActive() == true { return nil }
+            if imeController?.getCurrentInputMode() == .japanese, keyboardMonitor?.isSpacePressed() == true { return nil }
+            if let prev = info.characterBefore {
+                if isJapanese(prev) { return .japanese }
+                if let sc = String(prev).unicodeScalars.first, sc.isASCII && (CharacterSet.letters.contains(sc) || CharacterSet.decimalDigits.contains(sc)) { return .english }
             }
         }
         return nil
@@ -156,48 +174,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let manager = manager, let imeController = imeController else { return }
 
         // 前の文字を取得
-        if let info = manager.getDetailedInfo() {
+        if let ctx = manager.getContextInfo() {
             print("─────────────────────────────────────────────────")
             print("🎯 Alphabet key detected!")
-
-            // テキストが長い場合は省略表示
-            let displayText: String
-            if info.text.count > 100 {
-                let prefix = String(info.text.prefix(50))
-                displayText = "\(prefix)... (total: \(info.text.count) chars)"
+            print("📍 Cursor position: \(ctx.cursorPosition)")
+            if let ch = ctx.left {
+                print("✨ Character before cursor: \(String(ch).debugDescription)")
+                // Diagnostic only: switching is handled in the pre-event path
             } else {
-                displayText = info.text
-            }
-            print("📝 Text: \"\(displayText)\"")
-            print("📍 Cursor position: \(info.cursorPosition)")
-
-            if let char = info.characterBefore {
-                print("✨ Character before cursor: '\(char)'")
-
-                // Analyze character type and switch IME
-                let scalar = String(char).unicodeScalars.first!
-                if CharacterSet.letters.contains(scalar) {
-                    if isJapanese(char) {
-                        print("🇯🇵 Type: Japanese → Switching to Japanese IME")
-                        imeController.switchToInputMode(.japanese)
-                    } else {
-                        print("🔤 Type: English → Switching to English input")
-                        imeController.switchToInputMode(.english)
-                    }
-                } else if CharacterSet.decimalDigits.contains(scalar) {
-                    print("🔢 Type: Number → Switching to English input")
-                    imeController.switchToInputMode(.english)
-                } else {
-                    // 空白、改行、記号などは何もしない（現在のIME状態を維持）
-                    print("🔣 Type: Symbol/Whitespace/Newline → No change (keeping current IME state)")
-                }
-            } else {
-                // 文頭や文字が取得できない場合も何もしない
-                if info.cursorPosition == 0 {
-                    print("⬜️ Character before cursor: (none - cursor at beginning) → No change")
-                } else {
-                    print("❌ Failed to get character (cursor at \(info.cursorPosition), text length: \(info.text.count)) → No change")
-                }
+                print("⬜️ Character before cursor: (none)")
             }
         }
     }
@@ -205,7 +190,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func statusItemClicked() {
         let menu = NSMenu()
 
-        menu.addItem(NSMenuItem(title: "FlowIME - Phase 3", action: nil, keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "FlowIME \(appVersionString())", action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
 
         if AccessibilityManager.checkAccessibilityPermissions() {

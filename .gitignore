@@ -5,6 +5,7 @@
 # Xcode
 DerivedData/
 build/
+dist/
 *.xcuserdatad/
 *.xcworkspace/xcuserdata/
 *.xcuserstate
@@ -26,8 +27,10 @@ build/
 # Logs
 *.log
 
+# Disk images
+*.dmg
+
 # Carthage / CocoaPods (not used)
 Carthage/Build/
 Pods/
 *.ruby-version
-

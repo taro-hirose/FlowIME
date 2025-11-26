@@ -19,6 +19,37 @@ class AccessibilityManager {
         return AXIsProcessTrusted()
     }
 
+    /// Lightweight context: cursor position and neighbor characters only
+    func getContextInfo() -> (cursorPosition: Int, left: Character?, right: Character?)? {
+        guard let element = getFocusedElement() else { return nil }
+
+        // 1) Get selection range (cursor position)
+        var rangeValue: AnyObject?
+        let res = AXUIElementCopyAttributeValue(element, kAXSelectedTextRangeAttribute as CFString, &rangeValue)
+        guard res == .success, let any = rangeValue else { return nil }
+        let axVal = any as! AXValue
+        var cfRange = CFRange()
+        guard AXValueGetValue(axVal, .cfRange, &cfRange) else { return nil }
+        let pos = cfRange.location
+
+        // Helper to fetch 1 char string via parameterized attribute
+        func fetchChar(at location: Int) -> Character? {
+            let paramAttr: CFString = "AXStringForRange" as CFString
+            var tmpRange = CFRange(location: location, length: 1)
+            guard let paramAX = AXValueCreate(.cfRange, &tmpRange) else { return nil }
+            var result: AnyObject?
+            let r = AXUIElementCopyParameterizedAttributeValue(element, paramAttr, paramAX, &result)
+            if r == .success, let s = result as? String, let ch = s.first { return ch }
+            return nil
+        }
+
+        // Try left and right without reading entire text
+        let left: Character? = pos > 0 ? fetchChar(at: pos - 1) : nil
+        // We do not fetch right char for pos at end; best effort
+        let right: Character? = fetchChar(at: pos)
+
+        return (cursorPosition: pos, left: left, right: right)
+    }
     /// Check if there is active IME composition (marked text present)
     func isComposing() -> Bool {
         guard let element = getFocusedElement() else { return false }
@@ -168,7 +199,7 @@ class AccessibilityManager {
     }
 
     /// Get detailed information about the current text field state
-    func getDetailedInfo() -> (text: String, cursorPosition: Int, characterBefore: Character?)? {
+    func getDetailedInfo() -> (text: String, cursorPosition: Int, characterBefore: Character?, characterAfter: Character?)? {
         guard let element = getFocusedElement() else {
             return nil
         }
@@ -185,11 +216,16 @@ class AccessibilityManager {
 
         // Get character before cursor if available
         var characterBefore: Character?
+        var characterAfter: Character?
         if cursorPosition > 0 && cursorPosition <= text.count {
             let index = text.index(text.startIndex, offsetBy: cursorPosition - 1)
             characterBefore = text[index]
         }
+        if cursorPosition < text.count {
+            let index = text.index(text.startIndex, offsetBy: cursorPosition)
+            characterAfter = text[index]
+        }
 
-        return (text: text, cursorPosition: cursorPosition, characterBefore: characterBefore)
+        return (text: text, cursorPosition: cursorPosition, characterBefore: characterBefore, characterAfter: characterAfter)
     }
 }

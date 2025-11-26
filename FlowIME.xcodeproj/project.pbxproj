@@ -113,21 +113,6 @@
 			path = FlowIMEUITests;
 			sourceTree = "<group>";
 		};
-		963A5EB72ED6AFAB00634927 /* FlowIME-IMK */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "FlowIME-IMK";
-			sourceTree = "<group>";
-		};
-		963A5EC72ED6AFAD00634927 /* FlowIME-IMKTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "FlowIME-IMKTests";
-			sourceTree = "<group>";
-		};
-		963A5ED12ED6AFAD00634927 /* FlowIME-IMKUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "FlowIME-IMKUITests";
-			sourceTree = "<group>";
-		};
 		97ABF10D3EEE111100000001 /* FlowIMEHelper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = FlowIMEHelper;
@@ -216,9 +201,6 @@
 				963465392ED5B4A700882188 /* FlowIME */,
 				963465482ED5B4A800882188 /* FlowIMETests */,
 				963465522ED5B4A900882188 /* FlowIMEUITests */,
-				963A5EB72ED6AFAB00634927 /* FlowIME-IMK */,
-				963A5EC72ED6AFAD00634927 /* FlowIME-IMKTests */,
-				963A5ED12ED6AFAD00634927 /* FlowIME-IMKUITests */,
 				97ABF10D3EEE111100000001 /* FlowIMEHelper */,
 				963465382ED5B4A700882188 /* Products */,
 				96B428512ED6DFFC00BE0898 /* Recovered References */,
@@ -397,9 +379,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				963A5EB72ED6AFAB00634927 /* FlowIME-IMK */,
-			);
 			name = "FlowIME-IMK";
 			packageProductDependencies = (
 			);
@@ -420,9 +399,6 @@
 			dependencies = (
 				963A5EC52ED6AFAD00634927 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				963A5EC72ED6AFAD00634927 /* FlowIME-IMKTests */,
-			);
 			name = "FlowIME-IMKTests";
 			packageProductDependencies = (
 			);
@@ -442,9 +418,6 @@
 			);
 			dependencies = (
 				963A5ECF2ED6AFAD00634927 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				963A5ED12ED6AFAD00634927 /* FlowIME-IMKUITests */,
 			);
 			name = "FlowIME-IMKUITests";
 			packageProductDependencies = (
