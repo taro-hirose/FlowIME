@@ -1,0 +1,1355 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		97AAA0053EEE000100000001 /* FlowIME-IMKPrototype/IMEServerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AAA0023EEE000100000001 /* FlowIME-IMKPrototype/IMEServerApp.swift */; };
+		97AAA0063EEE000100000001 /* FlowIME-IMKPrototype/InputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AAA0033EEE000100000001 /* FlowIME-IMKPrototype/InputController.swift */; };
+		97AAA0073EEE000100000001 /* FlowIME-IMKPrototype/RomanKanaConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AAA0043EEE000100000001 /* FlowIME-IMKPrototype/RomanKanaConverter.swift */; };
+		97AAA0083EEE000100000001 /* InputMethodKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97AAA0013EEE000100000001 /* InputMethodKit.framework */; };
+		97ABF10A3EEE111100000001 /* FlowIMEHelper.app in Embed Login Items */ = {isa = PBXBuildFile; fileRef = 97ABF1013EEE111100000001 /* FlowIMEHelper.app */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		960BF8A82ED6B1050023FBB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9634652F2ED5B4A700882188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 960BF8992ED6B1040023FBB9;
+			remoteInfo = "FlowIME-IMK-2";
+		};
+		960BF8B22ED6B1050023FBB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9634652F2ED5B4A700882188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 960BF8992ED6B1040023FBB9;
+			remoteInfo = "FlowIME-IMK-2";
+		};
+		963465462ED5B4A800882188 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9634652F2ED5B4A700882188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 963465362ED5B4A700882188;
+			remoteInfo = FlowIME;
+		};
+		963465502ED5B4A900882188 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9634652F2ED5B4A700882188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 963465362ED5B4A700882188;
+			remoteInfo = FlowIME;
+		};
+		963A5EC42ED6AFAD00634927 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9634652F2ED5B4A700882188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 963A5EB52ED6AFAB00634927;
+			remoteInfo = "FlowIME-IMK";
+		};
+		963A5ECE2ED6AFAD00634927 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9634652F2ED5B4A700882188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 963A5EB52ED6AFAB00634927;
+			remoteInfo = "FlowIME-IMK";
+		};
+		97ABF10B3EEE111100000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9634652F2ED5B4A700882188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 97ABF1003EEE111100000001;
+			remoteInfo = FlowIMEHelper;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		97ABF1093EEE111100000001 /* Embed Login Items */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 16;
+			files = (
+				97ABF10A3EEE111100000001 /* FlowIMEHelper.app in Embed Login Items */,
+			);
+			name = "Embed Login Items";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		960BF89A2ED6B1040023FBB9 /* FlowIME-IMK-2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlowIME-IMK-2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		960BF8A72ED6B1050023FBB9 /* FlowIME-IMK-2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FlowIME-IMK-2Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		960BF8B12ED6B1050023FBB9 /* FlowIME-IMK-2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FlowIME-IMK-2UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		963465372ED5B4A700882188 /* FlowIME.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowIME.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		963465452ED5B4A800882188 /* FlowIMETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlowIMETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9634654F2ED5B4A900882188 /* FlowIMEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlowIMEUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		963A5EB62ED6AFAB00634927 /* FlowIME-IMK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlowIME-IMK.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		963A5EC32ED6AFAD00634927 /* FlowIME-IMKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FlowIME-IMKTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		963A5ECD2ED6AFAD00634927 /* FlowIME-IMKUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FlowIME-IMKUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		97AAA0013EEE000100000001 /* InputMethodKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputMethodKit.framework; path = System/Library/Frameworks/InputMethodKit.framework; sourceTree = SDKROOT; };
+		97AAA0023EEE000100000001 /* FlowIME-IMKPrototype/IMEServerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowIME-IMKPrototype/IMEServerApp.swift"; sourceTree = SOURCE_ROOT; };
+		97AAA0033EEE000100000001 /* FlowIME-IMKPrototype/InputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowIME-IMKPrototype/InputController.swift"; sourceTree = SOURCE_ROOT; };
+		97AAA0043EEE000100000001 /* FlowIME-IMKPrototype/RomanKanaConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowIME-IMKPrototype/RomanKanaConverter.swift"; sourceTree = SOURCE_ROOT; };
+		97ABF1013EEE111100000001 /* FlowIMEHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowIMEHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		963465392ED5B4A700882188 /* FlowIME */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlowIME;
+			sourceTree = "<group>";
+		};
+		963465482ED5B4A800882188 /* FlowIMETests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlowIMETests;
+			sourceTree = "<group>";
+		};
+		963465522ED5B4A900882188 /* FlowIMEUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlowIMEUITests;
+			sourceTree = "<group>";
+		};
+		963A5EB72ED6AFAB00634927 /* FlowIME-IMK */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "FlowIME-IMK";
+			sourceTree = "<group>";
+		};
+		963A5EC72ED6AFAD00634927 /* FlowIME-IMKTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "FlowIME-IMKTests";
+			sourceTree = "<group>";
+		};
+		963A5ED12ED6AFAD00634927 /* FlowIME-IMKUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "FlowIME-IMKUITests";
+			sourceTree = "<group>";
+		};
+		97ABF10D3EEE111100000001 /* FlowIMEHelper */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlowIMEHelper;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		960BF8972ED6B1040023FBB9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		960BF8A42ED6B1050023FBB9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		960BF8AE2ED6B1050023FBB9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963465342ED5B4A700882188 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963465422ED5B4A800882188 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9634654C2ED5B4A900882188 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5EB32ED6AFAB00634927 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97AAA0083EEE000100000001 /* InputMethodKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5EC02ED6AFAD00634927 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5ECA2ED6AFAD00634927 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97ABF1043EEE111100000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9634652E2ED5B4A700882188 = {
+			isa = PBXGroup;
+			children = (
+				963465392ED5B4A700882188 /* FlowIME */,
+				963465482ED5B4A800882188 /* FlowIMETests */,
+				963465522ED5B4A900882188 /* FlowIMEUITests */,
+				963A5EB72ED6AFAB00634927 /* FlowIME-IMK */,
+				963A5EC72ED6AFAD00634927 /* FlowIME-IMKTests */,
+				963A5ED12ED6AFAD00634927 /* FlowIME-IMKUITests */,
+				97ABF10D3EEE111100000001 /* FlowIMEHelper */,
+				963465382ED5B4A700882188 /* Products */,
+				96B428512ED6DFFC00BE0898 /* Recovered References */,
+			);
+			sourceTree = "<group>";
+		};
+		963465382ED5B4A700882188 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				963465372ED5B4A700882188 /* FlowIME.app */,
+				963465452ED5B4A800882188 /* FlowIMETests.xctest */,
+				9634654F2ED5B4A900882188 /* FlowIMEUITests.xctest */,
+				963A5EB62ED6AFAB00634927 /* FlowIME-IMK.app */,
+				963A5EC32ED6AFAD00634927 /* FlowIME-IMKTests.xctest */,
+				963A5ECD2ED6AFAD00634927 /* FlowIME-IMKUITests.xctest */,
+				960BF89A2ED6B1040023FBB9 /* FlowIME-IMK-2.app */,
+				960BF8A72ED6B1050023FBB9 /* FlowIME-IMK-2Tests.xctest */,
+				960BF8B12ED6B1050023FBB9 /* FlowIME-IMK-2UITests.xctest */,
+				97ABF1013EEE111100000001 /* FlowIMEHelper.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		96B428512ED6DFFC00BE0898 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				97AAA0023EEE000100000001 /* FlowIME-IMKPrototype/IMEServerApp.swift */,
+				97AAA0033EEE000100000001 /* FlowIME-IMKPrototype/InputController.swift */,
+				97AAA0043EEE000100000001 /* FlowIME-IMKPrototype/RomanKanaConverter.swift */,
+				97AAA0013EEE000100000001 /* InputMethodKit.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		960BF8992ED6B1040023FBB9 /* FlowIME-IMK-2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 960BF8BF2ED6B1060023FBB9 /* Build configuration list for PBXNativeTarget "FlowIME-IMK-2" */;
+			buildPhases = (
+				960BF8962ED6B1040023FBB9 /* Sources */,
+				960BF8972ED6B1040023FBB9 /* Frameworks */,
+				960BF8982ED6B1040023FBB9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "FlowIME-IMK-2";
+			packageProductDependencies = (
+			);
+			productName = "FlowIME-IMK-2";
+			productReference = 960BF89A2ED6B1040023FBB9 /* FlowIME-IMK-2.app */;
+			productType = "com.apple.product-type.application";
+		};
+		960BF8A62ED6B1050023FBB9 /* FlowIME-IMK-2Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 960BF8C02ED6B1060023FBB9 /* Build configuration list for PBXNativeTarget "FlowIME-IMK-2Tests" */;
+			buildPhases = (
+				960BF8A32ED6B1050023FBB9 /* Sources */,
+				960BF8A42ED6B1050023FBB9 /* Frameworks */,
+				960BF8A52ED6B1050023FBB9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				960BF8A92ED6B1050023FBB9 /* PBXTargetDependency */,
+			);
+			name = "FlowIME-IMK-2Tests";
+			packageProductDependencies = (
+			);
+			productName = "FlowIME-IMK-2Tests";
+			productReference = 960BF8A72ED6B1050023FBB9 /* FlowIME-IMK-2Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		960BF8B02ED6B1050023FBB9 /* FlowIME-IMK-2UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 960BF8C12ED6B1060023FBB9 /* Build configuration list for PBXNativeTarget "FlowIME-IMK-2UITests" */;
+			buildPhases = (
+				960BF8AD2ED6B1050023FBB9 /* Sources */,
+				960BF8AE2ED6B1050023FBB9 /* Frameworks */,
+				960BF8AF2ED6B1050023FBB9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				960BF8B32ED6B1050023FBB9 /* PBXTargetDependency */,
+			);
+			name = "FlowIME-IMK-2UITests";
+			packageProductDependencies = (
+			);
+			productName = "FlowIME-IMK-2UITests";
+			productReference = 960BF8B12ED6B1050023FBB9 /* FlowIME-IMK-2UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		963465362ED5B4A700882188 /* FlowIME */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 963465592ED5B4A900882188 /* Build configuration list for PBXNativeTarget "FlowIME" */;
+			buildPhases = (
+				963465332ED5B4A700882188 /* Sources */,
+				963465342ED5B4A700882188 /* Frameworks */,
+				963465352ED5B4A700882188 /* Resources */,
+				97ABF1093EEE111100000001 /* Embed Login Items */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				97ABF10C3EEE111100000001 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				963465392ED5B4A700882188 /* FlowIME */,
+			);
+			name = FlowIME;
+			packageProductDependencies = (
+			);
+			productName = FlowIME;
+			productReference = 963465372ED5B4A700882188 /* FlowIME.app */;
+			productType = "com.apple.product-type.application";
+		};
+		963465442ED5B4A800882188 /* FlowIMETests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9634655C2ED5B4A900882188 /* Build configuration list for PBXNativeTarget "FlowIMETests" */;
+			buildPhases = (
+				963465412ED5B4A800882188 /* Sources */,
+				963465422ED5B4A800882188 /* Frameworks */,
+				963465432ED5B4A800882188 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				963465472ED5B4A800882188 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				963465482ED5B4A800882188 /* FlowIMETests */,
+			);
+			name = FlowIMETests;
+			packageProductDependencies = (
+			);
+			productName = FlowIMETests;
+			productReference = 963465452ED5B4A800882188 /* FlowIMETests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		9634654E2ED5B4A900882188 /* FlowIMEUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9634655F2ED5B4A900882188 /* Build configuration list for PBXNativeTarget "FlowIMEUITests" */;
+			buildPhases = (
+				9634654B2ED5B4A900882188 /* Sources */,
+				9634654C2ED5B4A900882188 /* Frameworks */,
+				9634654D2ED5B4A900882188 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				963465512ED5B4A900882188 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				963465522ED5B4A900882188 /* FlowIMEUITests */,
+			);
+			name = FlowIMEUITests;
+			packageProductDependencies = (
+			);
+			productName = FlowIMEUITests;
+			productReference = 9634654F2ED5B4A900882188 /* FlowIMEUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		963A5EB52ED6AFAB00634927 /* FlowIME-IMK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 963A5EDB2ED6AFAD00634927 /* Build configuration list for PBXNativeTarget "FlowIME-IMK" */;
+			buildPhases = (
+				963A5EB22ED6AFAB00634927 /* Sources */,
+				963A5EB32ED6AFAB00634927 /* Frameworks */,
+				963A5EB42ED6AFAB00634927 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				963A5EB72ED6AFAB00634927 /* FlowIME-IMK */,
+			);
+			name = "FlowIME-IMK";
+			packageProductDependencies = (
+			);
+			productName = "FlowIME-IMK";
+			productReference = 963A5EB62ED6AFAB00634927 /* FlowIME-IMK.app */;
+			productType = "com.apple.product-type.application";
+		};
+		963A5EC22ED6AFAD00634927 /* FlowIME-IMKTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 963A5EDC2ED6AFAD00634927 /* Build configuration list for PBXNativeTarget "FlowIME-IMKTests" */;
+			buildPhases = (
+				963A5EBF2ED6AFAD00634927 /* Sources */,
+				963A5EC02ED6AFAD00634927 /* Frameworks */,
+				963A5EC12ED6AFAD00634927 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				963A5EC52ED6AFAD00634927 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				963A5EC72ED6AFAD00634927 /* FlowIME-IMKTests */,
+			);
+			name = "FlowIME-IMKTests";
+			packageProductDependencies = (
+			);
+			productName = "FlowIME-IMKTests";
+			productReference = 963A5EC32ED6AFAD00634927 /* FlowIME-IMKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		963A5ECC2ED6AFAD00634927 /* FlowIME-IMKUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 963A5EDD2ED6AFAD00634927 /* Build configuration list for PBXNativeTarget "FlowIME-IMKUITests" */;
+			buildPhases = (
+				963A5EC92ED6AFAD00634927 /* Sources */,
+				963A5ECA2ED6AFAD00634927 /* Frameworks */,
+				963A5ECB2ED6AFAD00634927 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				963A5ECF2ED6AFAD00634927 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				963A5ED12ED6AFAD00634927 /* FlowIME-IMKUITests */,
+			);
+			name = "FlowIME-IMKUITests";
+			packageProductDependencies = (
+			);
+			productName = "FlowIME-IMKUITests";
+			productReference = 963A5ECD2ED6AFAD00634927 /* FlowIME-IMKUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		97ABF1003EEE111100000001 /* FlowIMEHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 97ABF1063EEE111100000001 /* Build configuration list for PBXNativeTarget "FlowIMEHelper" */;
+			buildPhases = (
+				97ABF1033EEE111100000001 /* Sources */,
+				97ABF1043EEE111100000001 /* Frameworks */,
+				97ABF1053EEE111100000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				97ABF10D3EEE111100000001 /* FlowIMEHelper */,
+			);
+			name = FlowIMEHelper;
+			packageProductDependencies = (
+			);
+			productName = FlowIMEHelper;
+			productReference = 97ABF1013EEE111100000001 /* FlowIMEHelper.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9634652F2ED5B4A700882188 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					960BF8992ED6B1040023FBB9 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					960BF8A62ED6B1050023FBB9 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 960BF8992ED6B1040023FBB9;
+					};
+					960BF8B02ED6B1050023FBB9 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 960BF8992ED6B1040023FBB9;
+					};
+					963465362ED5B4A700882188 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					963465442ED5B4A800882188 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 963465362ED5B4A700882188;
+					};
+					9634654E2ED5B4A900882188 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 963465362ED5B4A700882188;
+					};
+					963A5EB52ED6AFAB00634927 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					963A5EC22ED6AFAD00634927 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 963A5EB52ED6AFAB00634927;
+					};
+					963A5ECC2ED6AFAD00634927 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 963A5EB52ED6AFAB00634927;
+					};
+					97ABF1003EEE111100000001 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+				};
+			};
+			buildConfigurationList = 963465322ED5B4A700882188 /* Build configuration list for PBXProject "FlowIME" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9634652E2ED5B4A700882188;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 963465382ED5B4A700882188 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				963465362ED5B4A700882188 /* FlowIME */,
+				963465442ED5B4A800882188 /* FlowIMETests */,
+				9634654E2ED5B4A900882188 /* FlowIMEUITests */,
+				963A5EB52ED6AFAB00634927 /* FlowIME-IMK */,
+				963A5EC22ED6AFAD00634927 /* FlowIME-IMKTests */,
+				963A5ECC2ED6AFAD00634927 /* FlowIME-IMKUITests */,
+				960BF8992ED6B1040023FBB9 /* FlowIME-IMK-2 */,
+				960BF8A62ED6B1050023FBB9 /* FlowIME-IMK-2Tests */,
+				960BF8B02ED6B1050023FBB9 /* FlowIME-IMK-2UITests */,
+				97ABF1003EEE111100000001 /* FlowIMEHelper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		960BF8982ED6B1040023FBB9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		960BF8A52ED6B1050023FBB9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		960BF8AF2ED6B1050023FBB9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963465352ED5B4A700882188 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963465432ED5B4A800882188 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9634654D2ED5B4A900882188 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5EB42ED6AFAB00634927 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5EC12ED6AFAD00634927 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5ECB2ED6AFAD00634927 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97ABF1053EEE111100000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		960BF8962ED6B1040023FBB9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		960BF8A32ED6B1050023FBB9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		960BF8AD2ED6B1050023FBB9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963465332ED5B4A700882188 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963465412ED5B4A800882188 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9634654B2ED5B4A900882188 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5EB22ED6AFAB00634927 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97AAA0053EEE000100000001 /* FlowIME-IMKPrototype/IMEServerApp.swift in Sources */,
+				97AAA0063EEE000100000001 /* FlowIME-IMKPrototype/InputController.swift in Sources */,
+				97AAA0073EEE000100000001 /* FlowIME-IMKPrototype/RomanKanaConverter.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5EBF2ED6AFAD00634927 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		963A5EC92ED6AFAD00634927 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97ABF1033EEE111100000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		960BF8A92ED6B1050023FBB9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 960BF8992ED6B1040023FBB9 /* FlowIME-IMK-2 */;
+			targetProxy = 960BF8A82ED6B1050023FBB9 /* PBXContainerItemProxy */;
+		};
+		960BF8B32ED6B1050023FBB9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 960BF8992ED6B1040023FBB9 /* FlowIME-IMK-2 */;
+			targetProxy = 960BF8B22ED6B1050023FBB9 /* PBXContainerItemProxy */;
+		};
+		963465472ED5B4A800882188 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 963465362ED5B4A700882188 /* FlowIME */;
+			targetProxy = 963465462ED5B4A800882188 /* PBXContainerItemProxy */;
+		};
+		963465512ED5B4A900882188 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 963465362ED5B4A700882188 /* FlowIME */;
+			targetProxy = 963465502ED5B4A900882188 /* PBXContainerItemProxy */;
+		};
+		963A5EC52ED6AFAD00634927 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 963A5EB52ED6AFAB00634927 /* FlowIME-IMK */;
+			targetProxy = 963A5EC42ED6AFAD00634927 /* PBXContainerItemProxy */;
+		};
+		963A5ECF2ED6AFAD00634927 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 963A5EB52ED6AFAB00634927 /* FlowIME-IMK */;
+			targetProxy = 963A5ECE2ED6AFAD00634927 /* PBXContainerItemProxy */;
+		};
+		97ABF10C3EEE111100000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 97ABF1003EEE111100000001 /* FlowIMEHelper */;
+			targetProxy = 97ABF10B3EEE111100000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		960BF8B92ED6B1060023FBB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "FlowIME-IMK-2/FlowIME_IMK_2.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMK-2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		960BF8BA2ED6B1060023FBB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "FlowIME-IMK-2/FlowIME_IMK_2.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMK-2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		960BF8BB2ED6B1060023FBB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMK-2Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowIME-IMK-2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FlowIME-IMK-2";
+			};
+			name = Debug;
+		};
+		960BF8BC2ED6B1060023FBB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMK-2Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowIME-IMK-2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FlowIME-IMK-2";
+			};
+			name = Release;
+		};
+		960BF8BD2ED6B1060023FBB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMK-2UITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "FlowIME-IMK-2";
+			};
+			name = Debug;
+		};
+		960BF8BE2ED6B1060023FBB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMK-2UITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "FlowIME-IMK-2";
+			};
+			name = Release;
+		};
+		963465572ED5B4A900882188 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		963465582ED5B4A900882188 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		9634655A2ED5B4A900882188 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FlowIME/FlowIME.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flowime.FlowIME;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9634655B2ED5B4A900882188 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FlowIME/FlowIME.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flowime.FlowIME;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		9634655D2ED5B4A900882188 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "FlowIME-Xcode.FlowIMETests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowIME.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FlowIME";
+			};
+			name = Debug;
+		};
+		9634655E2ED5B4A900882188 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "FlowIME-Xcode.FlowIMETests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowIME.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FlowIME";
+			};
+			name = Release;
+		};
+		963465602ED5B4A900882188 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "FlowIME-Xcode.FlowIMEUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = FlowIME;
+			};
+			name = Debug;
+		};
+		963465612ED5B4A900882188 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "FlowIME-Xcode.FlowIMEUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = FlowIME;
+			};
+			name = Release;
+		};
+		963A5ED52ED6AFAD00634927 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "FlowIME-IMK/FlowIME_IMK.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "FlowIME-IMK";
+				INFOPLIST_KEY_CFBundleName = "FlowIME-IMK";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_VALUES = "InputMethodConnectionName = FlowIME_InputServer";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMK";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		963A5ED62ED6AFAD00634927 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "FlowIME-IMK/FlowIME_IMK.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "FlowIME-IMK";
+				INFOPLIST_KEY_CFBundleName = "FlowIME-IMK";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_VALUES = "InputMethodConnectionName = FlowIME_InputServer";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMK";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		963A5ED72ED6AFAD00634927 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMKTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowIME-IMK.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FlowIME-IMK";
+			};
+			name = Debug;
+		};
+		963A5ED82ED6AFAD00634927 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMKTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowIME-IMK.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FlowIME-IMK";
+			};
+			name = Release;
+		};
+		963A5ED92ED6AFAD00634927 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMKUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "FlowIME-IMK";
+			};
+			name = Debug;
+		};
+		963A5EDA2ED6AFAD00634927 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.flowime.inputmethod.FlowIME-IMKUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "FlowIME-IMK";
+			};
+			name = Release;
+		};
+		97ABF1073EEE111100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flowime.inputmethod.FlowIMEHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		97ABF1083EEE111100000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flowime.inputmethod.FlowIMEHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		960BF8BF2ED6B1060023FBB9 /* Build configuration list for PBXNativeTarget "FlowIME-IMK-2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				960BF8B92ED6B1060023FBB9 /* Debug */,
+				960BF8BA2ED6B1060023FBB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		960BF8C02ED6B1060023FBB9 /* Build configuration list for PBXNativeTarget "FlowIME-IMK-2Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				960BF8BB2ED6B1060023FBB9 /* Debug */,
+				960BF8BC2ED6B1060023FBB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		960BF8C12ED6B1060023FBB9 /* Build configuration list for PBXNativeTarget "FlowIME-IMK-2UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				960BF8BD2ED6B1060023FBB9 /* Debug */,
+				960BF8BE2ED6B1060023FBB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		963465322ED5B4A700882188 /* Build configuration list for PBXProject "FlowIME" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				963465572ED5B4A900882188 /* Debug */,
+				963465582ED5B4A900882188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		963465592ED5B4A900882188 /* Build configuration list for PBXNativeTarget "FlowIME" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9634655A2ED5B4A900882188 /* Debug */,
+				9634655B2ED5B4A900882188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9634655C2ED5B4A900882188 /* Build configuration list for PBXNativeTarget "FlowIMETests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9634655D2ED5B4A900882188 /* Debug */,
+				9634655E2ED5B4A900882188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9634655F2ED5B4A900882188 /* Build configuration list for PBXNativeTarget "FlowIMEUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				963465602ED5B4A900882188 /* Debug */,
+				963465612ED5B4A900882188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		963A5EDB2ED6AFAD00634927 /* Build configuration list for PBXNativeTarget "FlowIME-IMK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				963A5ED52ED6AFAD00634927 /* Debug */,
+				963A5ED62ED6AFAD00634927 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		963A5EDC2ED6AFAD00634927 /* Build configuration list for PBXNativeTarget "FlowIME-IMKTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				963A5ED72ED6AFAD00634927 /* Debug */,
+				963A5ED82ED6AFAD00634927 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		963A5EDD2ED6AFAD00634927 /* Build configuration list for PBXNativeTarget "FlowIME-IMKUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				963A5ED92ED6AFAD00634927 /* Debug */,
+				963A5EDA2ED6AFAD00634927 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		97ABF1063EEE111100000001 /* Build configuration list for PBXNativeTarget "FlowIMEHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				97ABF1073EEE111100000001 /* Debug */,
+				97ABF1083EEE111100000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9634652F2ED5B4A700882188 /* Project object */;
+}

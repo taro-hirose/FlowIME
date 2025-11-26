@@ -1,0 +1,8 @@
+# Treat Xcode project files as text and favor union merge to reduce conflicts
+*.pbxproj text eol=lf merge=union
+
+# Ensure Swift and plist files use LF endings
+*.swift text eol=lf
+*.plist text eol=lf
+*.md text eol=lf
+

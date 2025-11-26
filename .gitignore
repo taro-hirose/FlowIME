@@ -1,0 +1,33 @@
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+DerivedData/
+build/
+*.xcuserdatad/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# Swift Package Manager / Build
+.swiftpm/
+.build/
+
+# Archives
+*.xcarchive
+
+# Coverage / Profiling
+*.profraw
+*.profdata
+
+# Logs
+*.log
+
+# Carthage / CocoaPods (not used)
+Carthage/Build/
+Pods/
+*.ruby-version
+
