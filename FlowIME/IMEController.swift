@@ -25,6 +25,8 @@ class IMEController {
     private var enforceUntil: Date?
     private var lastNotifiedSourceID: String?
     private var lastNotifyAt: Date?
+    // Callback for input source changes: (newMode, programmatic)
+    var onInputSourceChanged: ((InputMode, Bool) -> Void)?
 
     /// 現在のIME状態を取得
     func getCurrentInputMode() -> InputMode? {
@@ -112,9 +114,11 @@ class IMEController {
         lastNotifiedSourceID = currentID
         lastNotifyAt = Date()
 
+        var isProgrammatic = false
         if programmaticChangeInProgress {
             programmaticChangeInProgress = false
             print("🔄 Input source changed (programmatic) \(currentID ?? "")")
+            isProgrammatic = true
         } else {
             // Enforcement: briefly resist opposite auto-switches from OS/user
             if let until = enforceUntil, Date() < until, let target = enforceDesiredModeValue {
@@ -141,6 +145,9 @@ class IMEController {
             // Do NOT mark user toggle here blindly; KeyboardMonitor will mark when real toggle shortcuts are pressed,
             // and our own menu actions call markUserToggle(). This avoids false positives from OS auto-switching.
             print("🔄 Input source changed (user/system) \(currentID ?? "")")
+        }
+        if let modeNow = getCurrentInputMode() {
+            onInputSourceChanged?(modeNow, isProgrammatic)
         }
     }
 

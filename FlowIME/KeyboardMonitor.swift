@@ -14,13 +14,15 @@ class KeyboardMonitor {
     private var lastCheckTime: Date?
     private let throttleInterval: TimeInterval = 0.2
     private var lastNavigationTime: Date?
-    private let navGraceWindow: TimeInterval = 0.05 // seconds (micro-deferral for AX to update)
-    private let deferDecisionInterval: TimeInterval = 0.05 // seconds
+    private let navGraceWindow: TimeInterval = 0.10 // seconds (deferral for AX to update)
+    private let deferDecisionInterval: TimeInterval = 0.08 // seconds
 
     // Called asynchronously after key event (for logging, etc.)
     var onAlphabetInput: (() -> Void)?
     // Optional: notify the actual alphabet key pressed (for diagnostics)
     var onAlphabetKey: ((String) -> Void)?
+    // Notify app when a navigation event occurred (to trigger nav-time decision)
+    var onNavigationEvent: (() -> Void)?
     // Decide desired input mode BEFORE the key is delivered (called in tap thread)
     // Return nil to keep current mode and not consume the event.
     var onPreAlphabetInputDecide: (() -> IMEController.InputMode?)?
@@ -35,22 +37,29 @@ class KeyboardMonitor {
     private let compositionHoldWindow: TimeInterval = 1.5
     // Track if Space key is currently held (candidate selection etc.)
     private var spacePressed: Bool = false
+    // Decision gate: disable left-char switching during JP typing until navigation
+    private var decisionGateEnabled: Bool = true
     // Simple Japanese input session tracking
     private var jpSessionActive: Bool = false
     private var jpSessionCount: Int = 0
     // Hold JP preference briefly after cancelling composition by deletion
     private var canceledJPHoldUntil: Date?
+    // After switching to JP (user or programmatic), lock auto-switching after the first typed character
+    private var pendingJPLockAfterSwitch: Bool = false
 
     init() {}
 
     func startMonitoring() {
-        // Create event tap for key and mouse down events
+        // Create event tap for key and mouse down/up events
         let eventMask = (
             (1 << CGEventType.keyDown.rawValue) |
             (1 << CGEventType.keyUp.rawValue) |
             (1 << CGEventType.leftMouseDown.rawValue) |
             (1 << CGEventType.rightMouseDown.rawValue) |
-            (1 << CGEventType.otherMouseDown.rawValue)
+            (1 << CGEventType.otherMouseDown.rawValue) |
+            (1 << CGEventType.leftMouseUp.rawValue) |
+            (1 << CGEventType.rightMouseUp.rawValue) |
+            (1 << CGEventType.otherMouseUp.rawValue)
         )
 
         guard let eventTap = CGEvent.tapCreate(
@@ -113,6 +122,16 @@ class KeyboardMonitor {
         print("🛑 Keyboard monitoring stopped")
     }
 
+    // Mark an external navigation-like event (e.g., app switch, mouse click observed elsewhere)
+    func markExternalNavigation() {
+        lastNavigationTime = Date()
+        decisionGateEnabled = true
+    }
+
+    func markJPSwitchPendingLock() {
+        pendingJPLockAfterSwitch = true
+    }
+
     // MARK: - Event processing
 
     // Magic tag to identify synthetic events we post (hex literal)
@@ -128,9 +147,12 @@ class KeyboardMonitor {
     private let runLockWindow: TimeInterval = 0.2
 
     private func processEvent(type: CGEventType, event: CGEvent) -> Bool {
-        // Treat mouse clicks as navigation (caret may move by click)
-        if type == .leftMouseDown || type == .rightMouseDown || type == .otherMouseDown {
+        // Treat mouse press/release as navigation (caret may move by click)
+        if type == .leftMouseDown || type == .rightMouseDown || type == .otherMouseDown ||
+           type == .leftMouseUp   || type == .rightMouseUp   || type == .otherMouseUp {
             lastNavigationTime = Date()
+            decisionGateEnabled = true
+            onNavigationEvent?()
             // Do not consume mouse events
             return false
         }
@@ -170,6 +192,8 @@ class KeyboardMonitor {
             jpSessionActive = false
             jpSessionCount = 0
             canceledJPHoldUntil = nil
+            decisionGateEnabled = true
+            onNavigationEvent?()
             return false
         }
 
@@ -181,6 +205,8 @@ class KeyboardMonitor {
             jpSessionActive = false
             jpSessionCount = 0
             canceledJPHoldUntil = nil
+            decisionGateEnabled = true
+            onNavigationEvent?()
             // Do not consume commit keys
             return false
         }
@@ -195,12 +221,15 @@ class KeyboardMonitor {
                 jpSessionCount &+= 1
                 // JP resumed; clear canceled hold
                 canceledJPHoldUntil = nil
+                // Disable decision gate while JP typing continues
+                decisionGateEnabled = false
             }
             if isCommitKey(keyCode: keyCode) {
                 compositionHoldUntil = nil
                 jpSessionActive = false
                 jpSessionCount = 0
                 canceledJPHoldUntil = nil
+                decisionGateEnabled = true
             }
         }
 
@@ -255,25 +284,40 @@ class KeyboardMonitor {
                             // Do not switch back; just inject with current mode
                         } else {
                         let current = ime.getCurrentInputMode()
-                        if current != desiredMode {
+                        var doSwitch = true
+                        if self.pendingJPLockAfterSwitch && desiredMode == .english {
+                            // Suppress EN switch on the very first key after switching to JP
+                            doSwitch = false
+                        }
+                        if doSwitch, current != desiredMode {
                             ime.switchToInputMode(desiredMode)
                             ime.enforceDesiredMode(desiredMode)
                             if desiredMode == .japanese {
                                 self.jpSessionActive = true
                                 self.jpSessionCount = max(1, self.jpSessionCount + 1)
                                 self.canceledJPHoldUntil = nil
+                                self.decisionGateEnabled = false
                             } else {
                                 self.jpSessionActive = false
                                 self.jpSessionCount = 0
                                 self.canceledJPHoldUntil = nil
+                                self.decisionGateEnabled = true
                             }
                             self.lastProgSwitchMode = desiredMode
                             self.lastProgSwitchAt = Date()
                         }
                         }
+                    } else if let desiredMode = desired, desiredMode == .japanese {
+                        // Already in JP but JP desired: still lock
+                        self.decisionGateEnabled = false
                     }
                     self.postSyntheticKey(keyCode: keyCode, flags: flags, keyDown: true)
                     self.postSyntheticKey(keyCode: keyCode, flags: flags, keyDown: false)
+                    if self.pendingJPLockAfterSwitch {
+                        // First key processed after JP switch; lock until next navigation
+                        self.decisionGateEnabled = false
+                        self.pendingJPLockAfterSwitch = false
+                    }
                     DispatchQueue.main.async { [weak self] in
                         if let letter = self?.lastKeyString { self?.onAlphabetKey?(letter) }
                         self?.onAlphabetInput?()
@@ -286,7 +330,12 @@ class KeyboardMonitor {
             let desired = onPreAlphabetInputDecide?()
             if let desiredMode = desired, let ime = imeController {
                 let current = ime.getCurrentInputMode()
-                if current != desiredMode {
+                var doSwitch = true
+                if pendingJPLockAfterSwitch && desiredMode == .english {
+                    // Suppress EN switch on the first key after JP switch
+                    doSwitch = false
+                }
+                if doSwitch, current != desiredMode {
                     // Prefer responsiveness: allow immediate switch
                     lastCheckTime = now
                     ime.switchToInputMode(desiredMode)
@@ -295,16 +344,22 @@ class KeyboardMonitor {
                         jpSessionActive = true
                         jpSessionCount = max(1, jpSessionCount + 1)
                         canceledJPHoldUntil = nil
+                        decisionGateEnabled = false
                     } else {
                         jpSessionActive = false
                         jpSessionCount = 0
                         canceledJPHoldUntil = nil
+                        decisionGateEnabled = true
                     }
                     lastProgSwitchMode = desiredMode
                     lastProgSwitchAt = now
                     postSyntheticKey(keyCode: keyCode, flags: flags, keyDown: true)
                     postSyntheticKey(keyCode: keyCode, flags: flags, keyDown: false)
                     suppressNextKeyUpForKeyCodes.insert(keyCode)
+                    if pendingJPLockAfterSwitch {
+                        decisionGateEnabled = false
+                        pendingJPLockAfterSwitch = false
+                    }
                     DispatchQueue.main.async { [weak self] in
                         if let letter = self?.lastKeyString { self?.onAlphabetKey?(letter) }
                         self?.onAlphabetInput?()
@@ -315,6 +370,7 @@ class KeyboardMonitor {
                 if desiredMode == .japanese {
                     jpSessionActive = true
                     jpSessionCount &+= 1
+                    decisionGateEnabled = false
                 }
             }
 
@@ -352,6 +408,11 @@ class KeyboardMonitor {
         if type == .keyDown, let ime = imeController, ime.getCurrentInputMode() == .japanese {
             if !hasModifiers && !isNavigationKey(keyCode: keyCode) && !isCommitKey(keyCode: keyCode) && !isSpace(keyCode: keyCode) {
                 lastUserTypingTime = Date()
+                if pendingJPLockAfterSwitch {
+                    // First actual JP textual key after JP switch: lock until next navigation
+                    decisionGateEnabled = false
+                    pendingJPLockAfterSwitch = false
+                }
             }
         }
 
@@ -451,6 +512,11 @@ class KeyboardMonitor {
         if let t = canceledJPHoldUntil { return Date() < t }
         return false
     }
+
+    // Decision gate accessors
+    func isDecisionGateEnabled() -> Bool { decisionGateEnabled }
+    func enableDecisionGate() { decisionGateEnabled = true }
+    func disableDecisionGate() { decisionGateEnabled = false }
 
     private func isRunLockBlocking(_ desired: IMEController.InputMode) -> Bool {
         if let mode = runLockMode, let until = runLockUntil, Date() < until {

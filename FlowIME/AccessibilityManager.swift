@@ -3,7 +3,7 @@
 //  FlowIME
 //
 //  Created by Claude Code
-//
+//ko
 
 import Cocoa
 @preconcurrency import ApplicationServices
@@ -13,6 +13,12 @@ import Cocoa
 private let AXMarkedTextRangeAttributeName: CFString = "AXMarkedTextRange" as CFString
 
 class AccessibilityManager {
+    private var observer: AXObserver?
+    private var currentObservedElement: AXUIElement?
+    private var lastObservedPosition: Int?
+
+    // Callback when selection (cursor position) changes
+    var onSelectionChanged: (() -> Void)?
 
     /// Check if the app has accessibility permissions
     static func checkAccessibilityPermissions() -> Bool {
@@ -227,5 +233,119 @@ class AccessibilityManager {
         }
 
         return (text: text, cursorPosition: cursorPosition, characterBefore: characterBefore, characterAfter: characterAfter)
+    }
+
+    // MARK: - AXObserver for cursor movement detection
+
+    /// Start observing cursor position changes on the currently focused element
+    func startObservingCursorChanges() {
+        // Clean up existing observer
+        stopObservingCursorChanges()
+
+        guard let focusedElement = getFocusedElement() else {
+            print("⚠️ [AXObserver] No focused element to observe")
+            return
+        }
+
+        // Create observer for the current process
+        var observerRef: AXObserver?
+        let pid = ProcessInfo.processInfo.processIdentifier
+        let result = AXObserverCreate(pid, axObserverCallback, &observerRef)
+
+        guard result == .success, let observer = observerRef else {
+            print("❌ [AXObserver] Failed to create observer: \(result.rawValue)")
+            return
+        }
+
+        self.observer = observer
+        self.currentObservedElement = focusedElement
+
+        // Add observer to current run loop
+        CFRunLoopAddSource(
+            CFRunLoopGetCurrent(),
+            AXObserverGetRunLoopSource(observer),
+            .defaultMode
+        )
+
+        // Pass self pointer as user data (passUnretained is safe as long as observer is kept alive)
+        let selfPtr = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
+
+        // Observe selection change notification
+        let addResult = AXObserverAddNotification(
+            observer,
+            focusedElement,
+            kAXSelectedTextChangedNotification as CFString,
+            selfPtr
+        )
+
+        if addResult == .success {
+            // Get initial position
+            if let range = getSelectedTextRange(from: focusedElement) {
+                lastObservedPosition = range.location
+            }
+            print("✅ [AXObserver] Started observing cursor changes")
+        } else {
+            print("❌ [AXObserver] Failed to add notification observer: \(addResult.rawValue)")
+            stopObservingCursorChanges()
+        }
+    }
+
+    /// Stop observing cursor position changes
+    func stopObservingCursorChanges() {
+        if let observer = observer, let element = currentObservedElement {
+            AXObserverRemoveNotification(
+                observer,
+                element,
+                kAXSelectedTextChangedNotification as CFString
+            )
+
+            CFRunLoopRemoveSource(
+                CFRunLoopGetCurrent(),
+                AXObserverGetRunLoopSource(observer),
+                .defaultMode
+            )
+        }
+        observer = nil
+        currentObservedElement = nil
+        lastObservedPosition = nil
+    }
+
+    /// Handle selection change notification
+    fileprivate func handleSelectionChanged(element: AXUIElement) {
+        guard let range = getSelectedTextRange(from: element) else { return }
+        let newPosition = range.location
+
+        // Only trigger callback if position actually changed
+        if let lastPos = lastObservedPosition, lastPos != newPosition {
+            print("📍 [AXObserver] Cursor moved: \(lastPos) → \(newPosition)")
+            onSelectionChanged?()
+        }
+
+        lastObservedPosition = newPosition
+    }
+
+    /// Restart observation on the currently focused element (call after app/field focus change)
+    func restartObserving() {
+        startObservingCursorChanges()
+    }
+
+    deinit {
+        stopObservingCursorChanges()
+    }
+}
+
+// MARK: - AXObserver Callback
+
+private func axObserverCallback(
+    observer: AXObserver,
+    element: AXUIElement,
+    notification: CFString,
+    userData: UnsafeMutableRawPointer?
+) -> Void {
+    guard let userData = userData else { return }
+    let manager = Unmanaged<AccessibilityManager>.fromOpaque(userData).takeUnretainedValue()
+
+    if notification as String == kAXSelectedTextChangedNotification as String {
+        manager.handleSelectionChanged(element: element)
     }
 }
