@@ -30,6 +30,12 @@ dist/
 # Disk images
 *.dmg
 
+# Certificates and keys (DO NOT COMMIT)
+*.cer
+*.p12
+*.certSigningRequest
+*.mobileprovision
+
 # Carthage / CocoaPods (not used)
 Carthage/Build/
 Pods/
